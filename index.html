@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>廣島七日親子銀髮慢活之旅 - 終極地圖餐廳版</title>
+    <style>
+        :root {
+            --app-primary: #C0392B; 
+            --app-secondary: #E67E22; 
+            --app-dark: #2C3E50; 
+            --app-bg: #F8F9F9; 
+            --app-card: #FFFFFF; 
+            --jr-blue: #2471A3; 
+            --hiroden-green: #196F3D; 
+            --alert-bg: #FDEDEC;
+            --alert-border: #E74C3C;
+            --safe-color: #27AE60;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--app-bg);
+            color: var(--app-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 頂部 Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--app-primary), var(--app-secondary));
+            color: white;
+            padding: 30px 20px 20px 20px;
+            text-align: center;
+        }
+
+        .app-header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; font-weight: 800; }
+        .app-header p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+
+        /* 橫向滾動的分頁導航 (純 CSS 版) */
+        .tabs-container {
+            background-color: white;
+            padding: 10px 15px;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            scrollbar-width: none; 
+        }
+        .tabs-container::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            display: inline-block;
+            background-color: #F2F4F4;
+            color: #7F8C8D;
+            text-decoration: none;
+            padding: 8px 16px;
+            margin-right: 8px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        /* 純 CSS 內容區塊切換邏輯 */
+        .tab-content { 
+            display: none; 
+            padding: 20px 15px;
+            max-width: 650px; 
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 當沒有任何 target 時，預設顯示總覽 (tab1) */
+        .tab-content:target { display: block; }
+        .tab-content#tab1 { display: block; }
+        :target ~ #tab1 { display: none; } 
+
+        .tab-btn:active { background-color: var(--app-primary); color: white; }
+
+        /* 卡片樣式 */
+        .app-card { background: var(--app-card); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #E5E8E8; }
+        .card-title { font-size: 1.15rem; font-weight: 800; color: var(--app-primary); margin-top: 0; margin-bottom: 15px; border-left: 5px solid var(--app-primary); padding-left: 10px; display: flex; align-items: center; }
+
+        /* SVG 容器 */
+        .card-hero-svg { width: 100%; height: 180px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: block; }
+
+        .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+        .badge { background: #FDEDEC; color: #922B21; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; border: 1px solid #FADBD8; }
+        
+        /* 導航按鈕樣式 */
+        .btn-nav { 
+            display: inline-flex; 
+            align-items: center;
+            background: #2980B9; 
+            color: white; 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            margin-top: 8px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            box-shadow: 0 2px 4px rgba(41,128,185,0.2); 
+            transition: background 0.2s;
+        }
+        .btn-nav:hover { background: #1F618D; }
+        .btn-block { display: block; text-align: center; padding: 12px; font-size: 0.95rem; margin-top: 15px; }
+
+        .app-rail-map { background: #F8F9F9; padding: 15px; border-radius: 12px; border: 1px solid #EBEDEF; margin: 15px 0; overflow-x: auto; }
+        .rail-line-title { font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; color: #34495E; }
+        .rail-flow { display: flex; align-items: center; min-width: 500px; padding: 10px 0; margin-bottom: 15px; }
+        .rail-station { background: white; border: 2px solid var(--jr-blue); border-radius: 8px; padding: 8px 12px; font-size: 0.85rem; text-align: center; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); z-index: 2;}
+        .rail-station.base { border-color: var(--app-primary); background-color: #FDEDEC; color: var(--app-primary); }
+        .rail-arrow { height: 4px; background: var(--jr-blue); flex: 1; margin: 0 -5px; z-index: 1;}
+        .hiroden-flow .rail-station { border-color: var(--hiroden-green); }
+        .hiroden-flow .rail-arrow { background: var(--hiroden-green); }
+        .transit-badge { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; color: white; font-weight: bold; margin-bottom: 5px; }
+
+        .timeline-item { position: relative; border-left: 3px solid #BDC3C7; padding-left: 20px; margin-bottom: 25px; padding-bottom: 5px; }
+        .timeline-item::before { content: ''; position: absolute; left: -9px; top: 6px; width: 15px; height: 15px; background-color: var(--app-secondary); border-radius: 50%; box-shadow: 0 0 0 4px white; }
+        .time-badge { font-weight: 900; color: var(--app-secondary); font-size: 1.1rem; margin-bottom: 5px; display: inline-block; }
+        .route-info { background: #F8F9F9; border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; margin: 8px 0; border-left: 4px solid var(--jr-blue); color: #34495E; }
+        
+        .app-alert { background: var(--alert-bg); border-left: 5px solid var(--alert-border); padding: 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; margin: 15px 0; color: #7B241C; font-weight: bold; }
+        .app-safe { background: #EAFAF1; border-left: 5px solid var(--safe-color); padding: 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; margin: 15px 0; color: #145A32; font-weight: bold; }
+
+        .app-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .app-table th { background: var(--app-primary); color: white; padding: 10px; text-align: left; border-radius: 4px 4px 0 0;}
+        .app-table td { padding: 10px; border-bottom: 1px solid #E5E8E8; }
+        .footer { text-align: center; font-size: 0.8rem; color: #95A5A6; padding: 30px 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        <h1>廣島鐵道慢活 導航App</h1>
+        <p>四大兩小 · 景點餐廳全導航版</p>
+    </div>
+
+    <div class="tabs-container">
+        <a href="#tab1" class="tab-btn">📋 總覽</a>
+        <a href="#tab2" class="tab-btn">🗺️ 交通</a>
+        <a href="#tab10" class="tab-btn">🎟️ 購票</a>
+        <a href="#tab11" class="tab-btn">🍽️ 餐廳</a>
+        <a href="#tab3" class="tab-btn">D1 抵達</a>
+        <a href="#tab4" class="tab-btn">D2 宮島</a>
+        <a href="#tab5" class="tab-btn">D3 探索</a>
+        <a href="#tab6" class="tab-btn">D4 生態</a>
+        <a href="#tab7" class="tab-btn">D5 海景</a>
+        <a href="#tab8" class="tab-btn">D6 採購</a>
+        <a href="#tab9" class="tab-btn">D7 返航</a>
+    </div>
+
+    <div id="tab2" class="tab-content">
+        <div class="app-card" style="border-top: 5px solid var(--jr-blue);">
+            <div class="card-title">🗺️ 雙鐵路網相對看板</div>
+            <p style="font-size: 0.85rem; color: #7F8C8D; margin-top: 0;">專屬繪製，僅顯示本次旅行核心站點：</p>
+            <div class="app-rail-map">
+                <div class="rail-line-title" style="color:var(--jr-blue);">🚆 JR 西日本山陽本線 / 吳線</div>
+                <div class="rail-flow">
+                    <div class="rail-station">吳站<br><span style="font-size:0.7rem;font-weight:normal;">(大和艦)</span></div>
+                    <div class="rail-arrow"></div>
+                    <div class="rail-station">天神川<br><span style="font-size:0.7rem;font-weight:normal;">(永旺商場)</span></div>
+                    <div class="rail-arrow"></div>
+                    <div class="rail-station">廣島站<br><span style="font-size:0.7rem;font-weight:normal;">(樞紐)</span></div>
+                    <div class="rail-arrow"></div>
+                    <div class="rail-station">宮島口站<br><span style="font-size:0.7rem;font-weight:normal;">(轉渡輪)</span></div>
+                </div>
+
+                <div class="rail-line-title" style="color:var(--hiroden-green); margin-top: 20px;">🚋 廣島路面電車 (廣電)</div>
+                <div class="rail-flow hiroden-flow">
+                    <div class="rail-station">廣島站<br><span style="font-size:0.7rem;font-weight:normal;">(轉大巴)</span></div>
+                    <div class="rail-arrow"></div>
+                    <div class="rail-station base">八丁堀<br><span style="font-size:0.7rem;font-weight:normal;color:var(--app-primary);">🏠 基地</span></div>
+                    <div class="rail-arrow"></div>
+                    <div class="rail-station">原爆頂站<br><span style="font-size:0.7rem;font-weight:normal;">(科學館)</span></div>
+                    <div class="rail-arrow"></div>
+                    <div class="rail-station">廣電宮島口<br><span style="font-size:0.7rem;font-weight:normal;">(轉渡輪)</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-card">
+            <div class="card-title">🚃 每日交通策略總覽</div>
+            <div style="font-size: 0.9rem; line-height: 1.8;">
+                <span class="transit-badge" style="background:#7F8C8D;">Day 1 抵達</span><br>
+                <b>機場 ➡️ 廣島站：</b>利木津大巴<br>
+                <b>廣島站 ➡️ 八丁堀：</b>廣電電車<hr style="border:0;border-top:1px solid #eee;margin:10px 0;">
+                
+                <span class="transit-badge" style="background:var(--hiroden-green);">Day 2 宮島</span><br>
+                <b>八丁堀 ➡️ 宮島口：</b>廣電 2 號線 (免轉)<br>
+                <b>宮島口 ➡️ 宮島：</b>JR 西日本渡輪<hr style="border:0;border-top:1px solid #eee;margin:10px 0;">
+                
+                <span class="transit-badge" style="background:var(--hiroden-green);">Day 3 市區</span><br>
+                <b>八丁堀 ➡️ 原爆頂站：</b>廣電電車<hr style="border:0;border-top:1px solid #eee;margin:10px 0;">
+                
+                <span class="transit-badge" style="background:#28B463;">Day 4 生態</span><br>
+                <b>八丁堀 ➡️ 廣島站：</b>廣電電車<br>
+                <b>廣島站 ➡️ 動物園：</b>廣島電鐵巴士<hr style="border:0;border-top:1px solid #eee;margin:10px 0;">
+
+                <span class="transit-badge" style="background:var(--jr-blue);">Day 5 吳市</span><br>
+                <b>八丁堀 ➡️ 廣島站：</b>廣電電車<br>
+                <b>廣島站 ➡️ 吳站：</b>JR 吳線快速列車<hr style="border:0;border-top:1px solid #eee;margin:10px 0;">
+
+                <span class="transit-badge" style="background:var(--jr-blue);">Day 6 採購</span><br>
+                <b>公寓 ➡️ 縮景園：</b>🚕 計程車<br>
+                <b>廣島站 ➡️ 天神川：</b>JR 山陽本線
+            </div>
+        </div>
+    </div>
+
+    <div id="tab10" class="tab-content">
+        <div class="app-card" style="background-color: #EAFAF1; border-left: 5px solid var(--safe-color);">
+            <div class="card-title" style="color: var(--safe-color);">🎉 專屬購票福音</div>
+            <p style="font-size: 0.95rem; color: #34495E; margin-top:0; line-height: 1.6;">
+                <b>👶 雙寶無敵通關：</b><br>
+                3歲亦璇與10個月亦忻，全程景點皆免費入園！<br><br>
+                <b>👵 奶奶專屬禮遇：</b><br>
+                淑柃奶奶（滿65歲）享有敬老優惠，購票請出示<b>護照</b>。
+            </p>
+        </div>
+
+        <div class="app-card">
+            <div class="card-title">🎫 每日景點門票預估</div>
+            <div style="font-size: 0.85rem; color: #7F8C8D; margin-bottom: 15px;">皆無需提前預約，現場購票保持最大彈性：</div>
+            <div class="timeline-item"><div class="time-badge" style="color: #2471A3;">Day 2：宮島</div><div class="route-info" style="border-left-color: #2471A3;"><b>① 宮島訪問稅：</b> 100 日圓/人<br><b>② 嚴島神社：</b> 成人約 300 日圓<br><b>③ 宮島水族館：</b> 成人約 1,420 日圓</div></div>
+            <div class="timeline-item"><div class="time-badge" style="color: #196F3D;">Day 3：市區探索</div><div class="route-info" style="border-left-color: #196F3D;"><b>① 兒童科學館：</b> <b>常設展完全免費！</b><br><b>② 廣島紙鶴塔：</b> 成人約 2,200 日圓</div></div>
+            <div class="timeline-item"><div class="time-badge" style="color: #D35400;">Day 4：自然生態</div><div class="route-info" style="border-left-color: #D35400;"><b>① 安佐動物公園：</b> 成人約 510 日圓 / <b>敬老票約 170 日圓</b></div></div>
+            <div class="timeline-item"><div class="time-badge" style="color: #2C3E50;">Day 6：名庭漫步</div><div class="route-info" style="border-left-color: #2C3E50;"><b>① 縮景園：</b> 成人約 350 日圓 / <b>奶奶出示護照完全免費！</b></div></div>
+        </div>
+    </div>
+
+    <div id="tab11" class="tab-content">
+        <div class="app-card" style="border-top: 5px solid #8E44AD;">
+            <div class="card-title" style="color: #8E44AD;">🍽️ 餐廳預約與分流策略</div>
+            <p style="font-size: 0.9rem; color: #566573;">四大兩小的黃金陣容，在日本用餐需要一點優雅的戰術。請參考以下分級：</p>
+            
+            <div class="route-info" style="border-left-color: #C0392B; background-color: #FDEDEC;">
+                <b style="color:#C0392B;">🔴 類別一：強烈建議提前預訂包廂</b><br>
+                ▪️ <b>D2 晚餐：孫悟空燒肉</b> (指名獨立個室，寶寶安撫無壓力)<br>
+                ▪️ <b>D4 晚餐：釜飯 醉心本店</b> (廣島名產，指名寬敞和風座)<br>
+                ▪️ <b>D6 晚餐：廣島站居酒屋</b> (指名家庭包廂慶祝)
+            </div>
+
+            <div class="route-info" style="border-left-color: #E67E22; background-color: #FEF9E7;">
+                <b style="color:#E67E22;">🟡 類別二：無預約，請啟動「分流戰術」</b><br>
+                ▪️ <b>D3 晚餐：藥研堀 八昌</b> (廣島燒名店絕對要排隊。爸爸與姑姑 18:00 先候位，媽媽帶長輩雙寶 18:30 抵達直入！)<br>
+                ▪️ <b>D1 晚餐：麗ちゃん</b> (商場內有椅子可讓奶奶坐著稍候)
+            </div>
+
+            <div class="route-info" style="border-left-color: #27AE60; background-color: #EAFAF1;">
+                <b style="color:#27AE60;">🟢 類別三：行程彈性大，直接前往</b><br>
+                ▪️ <b>D5 晚餐：和食さと</b> (超友善家庭餐廳，沙發座極多)<br>
+                ▪️ <b>各日午餐：</b> (商場美食街或景觀餐廳，空間寬廣)
+            </div>
+        </div>
+
+        <div class="app-card">
+            <div class="card-title">📝 實用日文預約備註</div>
+            <div style="font-size: 0.85rem; line-height: 1.8; color: #34495E; background: #F8F9F9; padding: 10px; border-radius: 8px;">
+                <b>複製貼上於訂位系統「ご要望」欄：</b><br>
+                「大人4名、シニア1名、幼児2名（3歳、0歳）の合計6名です。」<br>
+                <i>(我們共6人，含1長者、2幼兒)</i><br><br>
+                「ベビーカーのまま入れる広い席を希望します。」<br>
+                <i>(希望能安排方便推車進出的座位)</i><br><br>
+                「できれば個室をお願いします。」<br>
+                <i>(希望能安排獨立包廂)</i>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab3" class="tab-content">
+        <div class="app-card">
+            <div class="card-title">Day 1：抵達廣島與安頓</div>
+            <div class="timeline-item">
+                <div class="time-badge">10:35</div>
+                <div>🛬 飛機降落廣島機場 (HIJ)。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島機場" target="_blank">📍 導航 廣島機場</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">11:20</div>
+                <div>🚌 搭乘<b>利木津接駁巴士</b>直達廣島站新幹線口。雙寶車上休憩。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:15</div>
+                <div>🍱 抵達後直接在廣島站內 <b>ekie 商場</b> 尋找餐廳午餐。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島站+ekie" target="_blank">📍 導航 ekie 商場</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:30</div>
+                <div>💤 搭乘廣電電車抵達八丁堀公寓。<br><b>午後休憩：</b>讓淑柃奶奶與雙寶安心午睡，適應環境。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島市中區八丁堀12-2" target="_blank">📍 導航 住宿基地</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">18:00</div>
+                <div>🍜 <b>晚餐：【麗ちゃん】（站內 ekie）</b>。動線平坦推車直入。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島+麗ちゃん" target="_blank">📍 導航 麗ちゃん 廣島燒</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab4" class="tab-content">
+        <div class="app-card">
+            <div class="card-title">Day 2：神之島宮島漫步</div>
+            <svg class="card-hero-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <rect width="800" height="250" fill="#D6EAF8"/><circle cx="600" cy="100" r="50" fill="#FDFEFE" opacity="0.8"/><rect y="250" width="800" height="150" fill="#2E86C1"/><path d="M0,250 Q 150,150 300,250 T 600,250 T 800,250 L 800,400 L 0,400 Z" fill="#85C1E9" opacity="0.4"/><rect x="250" y="120" width="300" height="25" fill="#E74C3C" rx="5"/><rect x="270" y="155" width="260" height="20" fill="#E74C3C"/><rect x="300" y="120" width="35" height="180" fill="#E74C3C"/><rect x="465" y="120" width="35" height="180" fill="#E74C3C"/><text x="400" y="340" font-family="sans-serif" font-size="32" fill="white" text-anchor="middle" font-weight="bold">嚴島神社 · 海上鳥居</text>
+            </svg>
+            <div class="timeline-item">
+                <div class="time-badge">09:30</div>
+                <div>🚃 八丁堀站<b>搭廣電 2 號線直達終點宮島口</b>。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣電宮島口站" target="_blank">📍 導航 廣電宮島口</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">10:30</div>
+                <div>⛴️ 乘無障礙 <b>JR西日本連絡船</b> 渡輪登島。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=JR西日本宮島渡輪" target="_blank">📍 導航 宮島渡輪碼頭</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">11:30</div>
+                <div>⛩️ <b>嚴島神社參拜</b>（全平整木棧道）。中午表參道吃牡蠣。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=嚴島神社" target="_blank">📍 導航 嚴島神社</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:00</div>
+                <div>🐬 <b>宮島水族館 (MIYAZIMARIN)</b>。空調舒適觀賞江豚。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=宮島水族館" target="_blank">📍 導航 宮島水族館</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">18:00</div>
+                <div>🥩 <b>晚餐：【孫悟空 黑毛和牛】</b>。預約獨立包廂，安心吃肉。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島+孫悟空+燒肉" target="_blank">📍 導航 孫悟空 燒肉</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab5" class="tab-content">
+        <div class="app-card">
+            <div class="card-title">Day 3：科學館探索與祈福</div>
+            <div class="timeline-item">
+                <div class="time-badge">10:00</div>
+                <div>🔬 電車至原爆頂站。<b>5-Days兒童文化科學館</b>。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島市兒童文化科學館" target="_blank">📍 導航 兒童科學館</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:00</div>
+                <div>🌸 <b>午餐：【廣島燒 櫻】</b>。口味清甜不油膩。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島燒+櫻" target="_blank">📍 導航 廣島燒 櫻</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:00</div>
+                <div>🏢 <b>廣島紙鶴塔</b>頂樓觀景，隨後至<b>護國神社</b>求平安御守。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島紙鶴塔" target="_blank">📍 導航 紙鶴塔</a>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島護國神社" target="_blank">📍 導航 護國神社</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">18:15</div>
+                <div>🍜 <b>晚餐：【藥研堀 八昌】傳奇名店</b>。啟動分流戰術！<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島+藥研堀+八昌" target="_blank">📍 導航 藥研堀 八昌</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab6" class="tab-content">
+        <div class="app-card">
+            <div class="card-title">Day 4：擁抱自然與野餐</div>
+            <div class="timeline-item">
+                <div class="time-badge">10:30</div>
+                <div>🐘 <b>安佐動物公園</b>。備有無障礙通道。看非洲大象。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島市安佐動物公園" target="_blank">📍 導航 安佐動物公園</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:30</div>
+                <div>🧺 <b>自然野餐：</b>在動物園草地享用日式便當。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">18:00</div>
+                <div>🍁 <b>晚餐：【釜飯 醉心 本店】名產精華</b>。全館無障礙電梯。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島+醉心+本店" target="_blank">📍 導航 釜飯 醉心 本店</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab7" class="tab-content">
+        <div class="app-card">
+            <div class="card-title">Day 5：吳市海景與愜意選購</div>
+            <svg class="card-hero-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <rect width="800" height="220" fill="#AEB6BF"/><circle cx="200" cy="120" r="40" fill="#FDFEFE" opacity="0.6"/><rect y="220" width="800" height="180" fill="#21618C"/><path d="M 120 220 L 680 220 L 600 340 L 200 340 Z" fill="#34495E"/><rect x="300" y="140" width="200" height="80" fill="#7F8C8D" rx="4"/><rect x="380" y="80" width="40" height="60" fill="#BDC3C7"/><text x="400" y="300" font-family="sans-serif" font-size="32" fill="white" text-anchor="middle" font-weight="bold">吳市 · 蔚藍海事巡禮</text>
+            </svg>
+            <div class="timeline-item">
+                <div class="time-badge">10:35</div>
+                <div>⚓ <b>大和博物館</b>。吳車站平穩連通道直通博物館，推車免搬運！<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=大和博物館" target="_blank">📍 導航 大和博物館</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:30</div>
+                <div>🍛 <b>午餐：吳港邊景觀餐廳（Youme Town）</b>。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=Youme+Town+吳" target="_blank">📍 導航 Youme Town 吳</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">16:00</div>
+                <div>🛍️ 媽媽姑姑前往<b>本通商店街</b>（藥妝店、唐吉訶德）愜意選購。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島本通商店街" target="_blank">📍 導航 本通商店街</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">18:30</div>
+                <div>🍲 <b>晚餐：【和食さと】日式家庭餐廳</b>。沙發卡座寬敞。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=和食さと+廣島" target="_blank">📍 導航 和食さと</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab8" class="tab-content">
+        <div class="app-card">
+            <div class="card-title">Day 6：名庭漫步與全方位採購</div>
+            <div class="timeline-item">
+                <div class="time-badge">10:00</div>
+                <div>🐟 <b>縮景園漫步</b>（搭計程車前往）。大寶餵錦鯉。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島+縮景園" target="_blank">📍 導航 縮景園</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:30</div>
+                <div>🛒 <b>全方位購物天堂：永旺夢樂城府中店</b>。前往「阿卡將本舖」。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=AEON+MALL+Hiroshima+Fuchu" target="_blank">📍 導航 永旺夢樂城府中</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:30</div>
+                <div>📦 傍晚轉戰站前 <b>Bic Camera</b> 瀏覽。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=Bic+Camera+廣島" target="_blank">📍 導航 Bic Camera</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">18:30</div>
+                <div>🍺 <b>晚餐：廣島站周邊精緻居酒屋（家庭包廂）</b>。舉杯慶祝！</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab9" class="tab-content">
+        <div class="app-card" style="border: 2px solid var(--app-primary);">
+            <div class="card-title" style="color: var(--app-primary);">Day 7：從容出發與優雅返航</div>
+            <div class="app-alert">
+                🌟 <b>從容出發溫馨提醒：</b>華航 CI113 於 11:40 起飛，10:40 關閉櫃檯！<b>若09:40才出發將過於匆忙！</b>為保優雅通關，請依循以下時刻：
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">08:05</div>
+                <div>🚃 公寓退房，搭電車抵達廣島車站。<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島車站" target="_blank">📍 導航 廣島車站</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">08:35</div>
+                <div>🚨 <b>搭乘廣島站新幹線口出發之利木津巴士</b>。行李置入底艙。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">09:30</div>
+                <div>🎒 <b>抵達機場華航櫃檯 Check-in。</b>距離關櫃有1.5小時餘裕！<br>
+                <a class="btn-nav" href="https://www.google.com/maps/search/?api=1&query=廣島機場" target="_blank">📍 導航 廣島機場</a></div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">11:40</div>
+                <div>🛫 <b>班機起飛！</b> 13:20 降落桃園機場。帶著美好的家族記憶，優雅賦歸！</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab1" class="tab-content">
+        <div class="app-card" style="border-top: 5px solid var(--app-secondary);">
+            <div class="card-title">🏠 核心住宿基地</div>
+            <svg class="card-hero-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <rect width="800" height="400" fill="#FDEBD0"/><circle cx="650" cy="120" r="60" fill="#FAD7A1" opacity="0.8"/><rect x="50" y="200" width="120" height="200" fill="#BDC3C7" rx="5"/><rect x="190" y="120" width="150" height="280" fill="#95A5A6" rx="5"/><rect x="360" y="160" width="180" height="240" fill="#7F8C8D" rx="5"/><rect x="560" y="220" width="140" height="180" fill="#AAB7B8" rx="5"/><circle cx="100" cy="380" r="50" fill="#2ECC71"/><circle cx="250" cy="390" r="60" fill="#27AE60"/><circle cx="480" cy="380" r="70" fill="#229954"/><text x="400" y="220" font-family="sans-serif" font-size="36" fill="white" text-anchor="middle" font-weight="bold">廣島市中心 · 八丁堀</text>
+            </svg>
+            <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: #566573;">
+                📍 <b>地址：</b>〒730-0013 廣島縣廣島市中區八丁堀 12-2<br>
+                💡 <b>優勢：</b>步行 2 分鐘內即達路面電車「八丁堀站」，全區平整，出行從容。
+            </p>
+            <a class="btn-nav btn-block" href="https://www.google.com/maps/search/?api=1&query=廣島市中區八丁堀12-2" target="_blank">🗺️ Google 地圖導航公寓</a>
+        </div>
+
+        <div class="app-card">
+            <div class="card-title">✈️ 華航航班與特殊服務</div>
+            <ul style="margin:0; padding-left: 20px; font-size: 0.9rem; color: #34495E; line-height: 1.8;">
+                <li><b>去程 (10/18)：</b>TPE 07:15 ➡️ HIJ 10:35 (航站 2)</li>
+                <li><b>回程 (10/24)：</b>HIJ 11:40 ➡️ TPE 13:20 (航站 2)</li>
+                <li><b>機上餐點：</b>亦璇(兒童餐 CHML) / 亦忻(嬰兒餐 BBML)</li>
+                <li><b>行李：</b>每人 23kg。嬰兒推車於登機門 Gate Check-in。</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        You Family, Have a good vacation!!! ❤️ Scott You Ⓡ 專家團隊聯合策劃
+    </div>
+
+</body>
+</html>
