@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>廣島七日親子銀髮慢活之旅 - 台灣接送完整版</title>
+    <title>廣島七日親子銀髮慢活之旅 - 旗艦完整版</title>
 
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M51.8 11.3c.1-.2.3-.3.5-.3.2 0 .4.1.5.3l10.4 23.7c1 2.4 3.3 4 5.9 4h21.1c.2 0 .4.1.5.3.1.2.1.4 0 .6L72.1 53.8c-2.1 1.6-3 4.3-2.2 6.9L76.5 82c.1.2 0 .4-.2.5-.2.1-.4.1-.5 0L53.1 68.7c-2.2-1.3-4.9-1.3-7.1 0L23.3 82.5c-.1.1-.3.1-.5 0s-.2-.3-.2-.5l6.5-21.3c.8-2.6-.1-5.3-2.2-6.9L9.7 39.9c-.1-.1-.1-.3 0-.6s.3-.3.5-.3h21.1c2.6 0 4.9-1.6 5.9-4l10.1-23.7z' fill='%23C0392B'/%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M51.8 11.3c.1-.2.3-.3.5-.3.2 0 .4.1.5.3l10.4 23.7c1 2.4 3.3 4 5.9 4h21.1c.2 0 .4.1.5.3.1.2.1.4 0 .6L72.1 53.8c-2.1 1.6-3 4.3-2.2 6.9L76.5 82c.1.2 0 .4-.2.5-.2.1-.4.1-.5 0L53.1 68.7c-2.2-1.3-4.9-1.3-7.1 0L23.3 82.5c-.1.1-.3.1-.5 0s-.2-.3-.2-.5l6.5-21.3c.8-2.6-.1-5.3-2.2-6.9L9.7 39.9c-.1-.1-.1-.3 0-.6s.3-.3.5-.3h21.1c2.6 0 4.9-1.6 5.9-4l10.1-23.7z' fill='%23C0392B'/%3E%3C/svg%3E">
@@ -94,7 +94,8 @@
         #tab8:checked ~ .app-container #content8,
         #tab9:checked ~ .app-container #content9,
         #tab10:checked ~ .app-container #content10,
-        #tab11:checked ~ .app-container #content11 { display: block; }
+        #tab11:checked ~ .app-container #content11,
+        #tab12:checked ~ .app-container #content12 { display: block; }
 
         #tab1:checked ~ .tabs-container label[for="tab1"],
         #tab2:checked ~ .tabs-container label[for="tab2"],
@@ -106,7 +107,8 @@
         #tab8:checked ~ .tabs-container label[for="tab8"],
         #tab9:checked ~ .tabs-container label[for="tab9"],
         #tab10:checked ~ .tabs-container label[for="tab10"],
-        #tab11:checked ~ .tabs-container label[for="tab11"] {
+        #tab11:checked ~ .tabs-container label[for="tab11"],
+        #tab12:checked ~ .tabs-container label[for="tab12"] {
             background-color: var(--app-primary); color: white; box-shadow: 0 4px 8px rgba(192, 57, 43, 0.3);
         }
 
@@ -154,13 +156,14 @@
 
     <div class="app-header">
         <h1>廣島鐵道慢活 導航App</h1>
-        <p>四大兩小 · 台灣接送整合版</p>
+        <p>四大兩小 · 旗艦完整版</p>
     </div>
 
     <input type="radio" name="tabs" id="tab1" checked>
     <input type="radio" name="tabs" id="tab2">
     <input type="radio" name="tabs" id="tab3">
     <input type="radio" name="tabs" id="tab4">
+    <input type="radio" name="tabs" id="tab12">
     <input type="radio" name="tabs" id="tab5">
     <input type="radio" name="tabs" id="tab6">
     <input type="radio" name="tabs" id="tab7">
@@ -174,6 +177,7 @@
         <label for="tab2" class="tab-label">🗺️ 交通</label>
         <label for="tab3" class="tab-label">🎟️ 購票</label>
         <label for="tab4" class="tab-label">🍽️ 餐廳</label>
+        <label for="tab12" class="tab-label">🎒 備忘</label>
         <label for="tab5" class="tab-label">D1 抵達</label>
         <label for="tab6" class="tab-label">D2 宮島</label>
         <label for="tab7" class="tab-label">D3 探索</label>
@@ -360,6 +364,49 @@
                     「できれば個室をお願いします。」<br>
                     <i>(希望能安排獨立包廂)</i>
                 </div>
+            </div>
+        </div>
+
+        <div id="content12" class="tab-content">
+            <div class="app-card" style="border-top: 5px solid #E67E22;">
+                <div class="card-title" style="color: #E67E22;">💊 一、 醫療與常備藥品 (台灣兒科開立)</div>
+                <p style="font-size: 0.85rem; color: #C0392B; margin-top:0; font-weight:bold;">
+                    ⚠️ 日本藥局難以直接買到 1 歲以下 (亦忻) 的處方藥與強效退燒藥，務必台灣備齊！
+                </p>
+                <ul style="margin:0; padding-left: 20px; font-size: 0.88rem; color: #34495E; line-height: 1.8;">
+                    <li><b>👶 雙寶常備藥：</b>口服退燒藥水、<b>退燒塞劑</b> (防吐藥)、感冒/化痰/抗過敏藥水、電解質水粉包、屁屁膏/抗過敏藥膏、<b>耳溫槍</b>。</li>
+                    <li><b>👵 奶奶與大人備藥：</b>慢性病藥 (多帶 3~5 天備份)、止痛/胃藥/止瀉藥、<b>暈車/暈船藥</b> (渡輪與巴士用)。</li>
+                </ul>
+            </div>
+
+            <div class="app-card" style="border-top: 5px solid #2980B9;">
+                <div class="card-title" style="color: #2980B9;">👶 二、 雙寶 (10M/3Y) 緊急物資</div>
+                <ul style="margin:0; padding-left: 20px; font-size: 0.88rem; color: #34495E; line-height: 1.8;">
+                    <li><b>免加熱副食品常溫包 (3~5包)：</b>亦忻專用，萬一外用餐點口味偏鹹可隨時食用。</li>
+                    <li><b>奶粉分裝袋 + 拋棄式奶瓶：</b>外出一日遊免洗奶瓶首選。</li>
+                    <li><b>推車雨罩 + 防風罩 (關鍵！)：</b>宮島與吳市海風勁強，防風保暖禦寒。</li>
+                    <li><b>安撫神物：</b>亦璇繪本小玩具、亦忻安撫奶嘴 (多帶備用)。</li>
+                </ul>
+            </div>
+
+            <div class="app-card">
+                <div class="card-title">🧥 三、 天候保暖與證件保險備份</div>
+                <ul style="margin:0; padding-left: 20px; font-size: 0.88rem; color: #34495E; line-height: 1.8;">
+                    <li><b>洋蔥式穿搭：</b>輕便折疊羽絨外套 / 防風外套 (廣島 10 月早晚溫差大)。</li>
+                    <li><b>推車小毯子 + 防風夾：</b>防止海風吹走，雙寶午睡保暖。</li>
+                    <li><b>證件備份：</b>全家護照影本 2 份 + 2吋照片每人 2 張 (與正本分開放)。</li>
+                    <li><b>保險與地址：</b>含海外突發疾病之保單號碼、民宿日文地址紙本。</li>
+                </ul>
+            </div>
+
+            <div class="app-card" style="background-color: #FEF9E7; border-left: 5px solid #F39C12;">
+                <div class="card-title" style="color: #D35400;">🎒 四、 隨身媽媽包 vs 託運行李分裝策略</div>
+                <p style="font-size: 0.88rem; color: #34495E; line-height: 1.7; margin:0;">
+                    <b>🎒 隨身媽媽包 (登機/每日外出)：</b><br>
+                    護照錢包、雙寶退燒/感冒藥、10M常溫粥1包、奶粉分裝/奶瓶、濕紙巾、推車防風罩、薄外套。<br><br>
+                    <b>🧳 託運行李箱：</b><br>
+                    大罐奶粉、大量尿布、多餘備用藥庫存、副食品庫存、護照影本備份。
+                </p>
             </div>
         </div>
 
@@ -625,7 +672,8 @@
                 </div>
                 <div class="timeline-item">
                     <div class="time-badge">09:55</div>
-                    <div>🛂 走優先通道完成安檢。</div>
+                    <div>
+🛂 走優先通道完成安檢。</div>
                 </div>
                 <div class="timeline-item">
                     <div class="time-badge">10:30</div>
@@ -653,7 +701,7 @@
     </div>
 
     <div class="footer">
-        You Family, Have a good vacation!!! ❤️ Scott You Ⓡ 專家團隊完整細節版
+        You Family, Have a good vacation!!! ❤️ Scott You Ⓡ 專家團隊旗艦完整版
     </div>
 
 </body>
